@@ -25,7 +25,7 @@ PDF_DIR = BASE_DIR / "generated_pdfs"
 PDF_DIR.mkdir(exist_ok=True)
 
 app = FastAPI(title="Vidhi Financial Services — Health Declaration Form")
-app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static"), check_dir=False), name="static")
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
