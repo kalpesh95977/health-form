@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health Insurance Declaration — ICICI Lombard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#122c4e;
+    --navy-deep:#0b1d35;
+    --sky:#eaf2fb;
+    --sky-mid:#cfe1f5;
+    --teal:#0f8f82;
+    --teal-dark:#0b6d63;
+    --amber:#c17a1f;
+    --ink:#1c2733;
+    --muted:#5c6b7a;
+    --line:#dde6ef;
+    --danger:#b6432f;
+    --card:#ffffff;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--sky);
+    font-family:'Inter','Noto Sans Gujarati',system-ui,sans-serif;
+    color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .topbar{
+    background:var(--navy);
+    background-image:linear-gradient(135deg,var(--navy) 0%,var(--navy-deep) 100%);
+    color:#fff;
+    padding:22px 20px 26px;
+    display:flex; justify-content:space-between; align-items:flex-start;
+  }
+  .topbar .brand{
+    font-family:'Fraunces',serif;
+    font-size:20px;
+    font-weight:600;
+    letter-spacing:.2px;
+  }
+  .topbar .sub{
+    font-size:12.5px;
+    color:#b9cbe3;
+    margin-top:3px;
+  }
+  .lang-switch{
+    display:flex; gap:6px; flex-shrink:0; margin-top:2px;
+  }
+  .lang-switch a{
+    font-size:12px; font-weight:600; text-decoration:none; padding:5px 10px;
+    border-radius:7px; color:#cfe1f5; border:1px solid rgba(255,255,255,.25);
+  }
+  .lang-switch a.active{ background:#fff; color:var(--navy); border-color:#fff; }
+
+  .wrap{
+    max-width:560px;
+    margin:0 auto;
+    padding:0 16px 60px;
+  }
+  .progress-track{
+    max-width:560px;
+    margin:-14px auto 0;
+    padding:0 20px;
+  }
+  .progress-card{
+    background:#fff;
+    border-radius:var(--radius);
+    box-shadow:0 6px 20px rgba(18,44,78,.12);
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .step-dot{
+    width:26px;height:26px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:12px;font-weight:700;
+    background:var(--sky-mid);color:var(--navy);
+    flex-shrink:0;
+    transition:all .2s;
+  }
+  .step-dot.active{background:var(--teal);color:#fff;}
+  .step-dot.done{background:var(--navy);color:#fff;}
+  .step-line{flex:1;height:2px;background:var(--line);}
+  .step-line.done{background:var(--navy);}
+
+  .card{
+    background:var(--card);
+    border-radius:var(--radius);
+    padding:22px 20px;
+    margin-top:18px;
+    box-shadow:0 2px 10px rgba(18,44,78,.06);
+    border:1px solid var(--line);
+  }
+  .card h2{
+    font-family:'Fraunces',serif;
+    font-size:19px;
+    font-weight:600;
+    margin:0 0 4px;
+    color:var(--navy);
+  }
+  .card .hint{
+    font-size:12.5px;color:var(--muted);margin-bottom:16px;
+  }
+  label{
+    display:block;font-size:12.5px;font-weight:600;color:var(--navy);
+    margin:14px 0 6px;
+  }
+  label .req{color:var(--danger);}
+  input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],select,textarea{
+    width:100%;padding:11px 12px;border:1.5px solid var(--line);border-radius:9px;
+    font-family:inherit;font-size:14.5px;color:var(--ink);
+    background:#fbfcfe;
+  }
+  input:focus,select:focus,textarea:focus{
+    outline:none;border-color:var(--teal);background:#fff;
+  }
+  textarea{min-height:70px;resize:vertical;}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .radio-group{display:flex;gap:16px;margin-top:8px;}
+  .radio-opt{display:flex;align-items:center;gap:6px;font-size:14px;}
+  .toggle-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 0;border-top:1px solid var(--line);margin-top:6px;
+  }
+  .toggle-row span{font-size:13.5px;font-weight:500;}
+  .switch{position:relative;width:42px;height:24px;flex-shrink:0;}
+  .switch input{opacity:0;width:0;height:0;}
+  .slider{
+    position:absolute;inset:0;background:#c9d5e2;border-radius:24px;cursor:pointer;transition:.2s;
+  }
+  .slider:before{
+    content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;
+    background:#fff;border-radius:50%;transition:.2s;
+  }
+  input:checked + .slider{background:var(--teal);}
+  input:checked + .slider:before{transform:translateX(18px);}
+
+  .member-card{
+    border:1.5px solid var(--line);border-radius:11px;padding:14px;margin-top:14px;background:#fbfcfe;
+  }
+  .member-card-head{
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .member-card-head b{font-size:13.5px;color:var(--navy);}
+  .remove-btn{
+    background:none;border:none;color:var(--danger);font-size:12px;font-weight:600;cursor:pointer;
+  }
+  .add-member-btn{
+    width:100%;margin-top:14px;padding:12px;border:1.5px dashed var(--teal);
+    background:#f2fbf9;color:var(--teal-dark);border-radius:9px;font-weight:600;font-size:13.5px;
+    cursor:pointer;
+  }
+
+  .btn-row{display:flex;gap:10px;margin-top:22px;}
+  .btn{
+    flex:1;padding:13px 16px;border-radius:10px;font-size:14.5px;font-weight:600;
+    border:none;cursor:pointer;text-align:center;
+  }
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-deep);}
+  .btn-secondary{background:#fff;color:var(--navy);border:1.5px solid var(--line);}
+  .btn:disabled{opacity:.5;cursor:not-allowed;}
+
+  .otp-box{display:flex;gap:10px;margin-top:10px;}
+  .otp-box input{letter-spacing:6px;font-size:18px;text-align:center;font-weight:700;}
+  .otp-send-btn{
+    white-space:nowrap;background:var(--teal);color:#fff;border:none;border-radius:9px;
+    padding:0 16px;font-size:13px;font-weight:600;cursor:pointer;
+  }
+  .otp-status{font-size:12.5px;margin-top:8px;}
+  .otp-status.ok{color:var(--teal-dark);font-weight:600;}
+  .otp-status.err{color:var(--danger);font-weight:600;}
+  .otp-status.wait{color:var(--muted);}
+
+  .declaration-box{
+    background:var(--sky);border-radius:10px;padding:14px;font-size:12.8px;line-height:1.6;color:var(--ink);
+    margin-top:14px;border:1px solid var(--sky-mid);
+  }
+  .consent-check{display:flex;gap:10px;align-items:flex-start;margin-top:14px;}
+  .consent-check input{margin-top:3px;width:18px;height:18px;flex-shrink:0;}
+  .consent-check label{margin:0;font-weight:500;font-size:13px;color:var(--ink);}
+
+  .success-screen{text-align:center;padding:40px 20px;}
+  .success-icon{
+    width:64px;height:64px;border-radius:50%;background:var(--teal);
+    display:flex;align-items:center;justify-content:center;margin:0 auto 18px;
+  }
+  .success-icon svg{width:30px;height:30px;}
+  .success-screen h2{font-family:'Fraunces',serif;color:var(--navy);font-size:22px;}
+  .success-screen p{color:var(--muted);font-size:14px;line-height:1.6;}
+  .sub-id{
+    display:inline-block;margin-top:10px;background:var(--sky);padding:6px 12px;
+    border-radius:8px;font-size:12.5px;color:var(--navy);font-weight:600;
+  }
+  .error-banner{
+    background:#fdeeec;border:1px solid #f3c8c0;color:var(--danger);
+    padding:10px 12px;border-radius:9px;font-size:13px;margin-top:12px;display:none;
+  }
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="brand">ICICI Lombard</div>
+    <div class="sub" data-i18n="subtitle"></div>
+  </div>
+  <div class="lang-switch">
+    <a href="/en" id="langEn">EN</a>
+    <a href="/gu" id="langGu">ગુજ</a>
+  </div>
+</div>
+
+<div class="progress-track">
+  <div class="progress-card" id="progressCard"></div>
+</div>
+
+<div class="wrap">
+  <form id="declarationForm" autocomplete="off">
+
+    <!-- STEP 1: Proposer -->
+    <section class="card step" data-step="1">
+      <h2 data-i18n="s1_title"></h2>
+      <div class="hint" data-i18n="s1_hint"></div>
+
+      <label data-i18n="l_full_name"></label>
+      <input type="text" name="proposer_name" required>
+
+      <div class="row2">
+        <div>
+          <label data-i18n="l_dob"></label>
+          <input type="date" name="proposer_dob" required>
+        </div>
+        <div>
+          <label data-i18n="l_gender"></label>
+          <select name="proposer_gender" required>
+            <option value="" data-i18n="opt_select"></option>
+            <option value="Male" data-i18n="opt_male"></option>
+            <option value="Female" data-i18n="opt_female"></option>
+            <option value="Other" data-i18n="opt_other"></option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row2">
+        <div>
+          <label data-i18n="l_mobile"></label>
+          <input type="tel" name="proposer_mobile" maxlength="10" pattern="[0-9]{10}" required>
+        </div>
+        <div>
+          <label data-i18n="l_email"></label>
+          <input type="email" name="proposer_email" required>
+        </div>
+      </div>
+
+      <label data-i18n="l_address"></label>
+      <textarea name="proposer_address" required></textarea>
+
+      <div class="row2">
+        <div><label data-i18n="l_city"></label><input type="text" name="proposer_city" required></div>
+        <div><label data-i18n="l_state"></label><input type="text" name="proposer_state" required></div>
+      </div>
+      <label data-i18n="l_pincode"></label>
+      <input type="text" name="proposer_pincode" maxlength="6" pattern="[0-9]{6}" required>
+
+      <div class="row2">
+        <div><label data-i18n="l_pan"></label><input type="text" name="proposer_pan" maxlength="10" style="text-transform:uppercase"></div>
+        <div><label data-i18n="l_occupation"></label><input type="text" name="proposer_occupation"></div>
+      </div>
+      <label data-i18n="l_income"></label>
+      <input type="text" name="proposer_annual_income">
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" data-i18n="btn_next" onclick="goNext(1)"></button>
+      </div>
+    </section>
+
+    <!-- STEP 2: Insured Members -->
+    <section class="card step hidden" data-step="2">
+      <h2 data-i18n="s2_title"></h2>
+      <div class="hint" data-i18n="s2_hint"></div>
+      <div id="membersContainer"></div>
+      <button type="button" class="add-member-btn" data-i18n="btn_add_member" onclick="addMember()"></button>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" data-i18n="btn_back" onclick="goPrev(2)"></button>
+        <button type="button" class="btn btn-primary" data-i18n="btn_next" onclick="goNext(2)"></button>
+      </div>
+    </section>
+
+    <!-- STEP 3: Policy Details -->
+    <section class="card step hidden" data-step="3">
+      <h2 data-i18n="s3_title"></h2>
+
+      <label data-i18n="l_sum_insured"></label>
+      <select name="sum_insured" required>
+        <option value="" data-i18n="opt_select"></option>
+        <option>₹3 Lakh</option><option>₹5 Lakh</option><option>₹10 Lakh</option>
+        <option>₹15 Lakh</option><option>₹25 Lakh</option><option>₹50 Lakh</option><option>₹1 Crore</option>
+      </select>
+
+      <label data-i18n="l_plan_type"></label>
+      <div class="radio-group">
+        <label class="radio-opt"><input type="radio" name="plan_type" value="Individual" required> <span data-i18n="opt_individual"></span></label>
+        <label class="radio-opt"><input type="radio" name="plan_type" value="Family Floater"> <span data-i18n="opt_family_floater"></span></label>
+      </div>
+
+      <div class="toggle-row">
+        <span data-i18n="l_existing_ins"></span>
+        <label class="switch"><input type="checkbox" id="existingInsToggle" onchange="toggleExistingIns(this)"><span class="slider"></span></label>
+      </div>
+      <div id="existingInsFields" class="hidden">
+        <label data-i18n="l_insurer_name"></label>
+        <input type="text" name="existing_insurer_name">
+        <label data-i18n="l_policy_number"></label>
+        <input type="text" name="existing_policy_number">
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" data-i18n="btn_back" onclick="goPrev(3)"></button>
+        <button type="button" class="btn btn-primary" data-i18n="btn_next" onclick="goNext(3)"></button>
+      </div>
+    </section>
+
+    <!-- STEP 4: Nominee -->
+    <section class="card step hidden" data-step="4">
+      <h2 data-i18n="s4_title"></h2>
+      <div class="hint" data-i18n="s4_hint"></div>
+
+      <label data-i18n="l_nominee_name"></label>
+      <input type="text" name="nominee_name" required>
+
+      <div class="row2">
+        <div><label data-i18n="l_relationship"></label><input type="text" name="nominee_relationship" required></div>
+        <div><label data-i18n="l_nominee_dob"></label><input type="date" name="nominee_dob" required></div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" data-i18n="btn_back" onclick="goPrev(4)"></button>
+        <button type="button" class="btn btn-primary" data-i18n="btn_next" onclick="goNext(4)"></button>
+      </div>
+    </section>
+
+    <!-- STEP 5: OTP + Declaration -->
+    <section class="card step hidden" data-step="5">
+      <h2 data-i18n="s5_title"></h2>
+      <div class="hint" data-i18n="s5_hint"></div>
+
+      <label data-i18n="l_registered_mobile"></label>
+      <div class="otp-box">
+        <input type="tel" id="otpMobileDisplay" readonly>
+        <button type="button" class="otp-send-btn" id="sendOtpBtn" data-i18n="btn_send_otp" onclick="sendOtp()"></button>
+      </div>
+
+      <div id="otpInputWrap" class="hidden">
+        <label data-i18n="l_enter_otp"></label>
+        <div class="otp-box">
+          <input type="text" id="otpInput" maxlength="4" inputmode="numeric">
+          <button type="button" class="otp-send-btn" data-i18n="btn_verify" onclick="checkOtp()"></button>
+        </div>
+      </div>
+      <div id="otpStatus" class="otp-status"></div>
+
+      <div class="declaration-box" id="declarationText"></div>
+
+      <div class="consent-check">
+        <input type="checkbox" id="agreeCheck">
+        <label for="agreeCheck" data-i18n="l_consent"></label>
+      </div>
+
+      <div class="error-banner" id="errorBanner"></div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" data-i18n="btn_back" onclick="goPrev(5)"></button>
+        <button type="button" class="btn btn-primary" id="submitBtn" data-i18n="btn_submit" onclick="submitForm()" disabled></button>
+      </div>
+    </section>
+
+    <!-- SUCCESS -->
+    <section class="card success-screen hidden" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M4 12l5 5L20 6"/></svg>
+      </div>
+      <h2 data-i18n="success_title"></h2>
+      <p data-i18n="success_text"></p>
+      <div class="sub-id" id="submissionIdBadge"></div>
+    </section>
+
+  </form>
+</div>
+
+<script>
+const PAGE_LANG = "{{ lang }}";
+
+const TRANSLATIONS = {
+  en: {
+    subtitle: "Health Insurance — Customer Detail Declaration",
+    s1_title: "Your Details",
+    s1_hint: "Please fill in the proposer's (policyholder's) basic information.",
+    l_full_name: "Full Name *",
+    l_dob: "Date of Birth *",
+    l_gender: "Gender *",
+    opt_select: "Select",
+    opt_male: "Male", opt_female: "Female", opt_other: "Other",
+    l_mobile: "Mobile Number *",
+    l_email: "Email *",
+    l_address: "Address *",
+    l_city: "City *", l_state: "State *", l_pincode: "Pincode *",
+    l_pan: "PAN Number", l_occupation: "Occupation", l_income: "Annual Income (₹)",
+    btn_next: "Next", btn_back: "Back",
+    s2_title: "Insured Members",
+    s2_hint: "Please provide medical details of the person(s) to be insured (self, spouse, children, parents).",
+    btn_add_member: "+ Add Member",
+    m_relationship: "Relationship *", m_full_name: "Full Name *", m_dob: "Date of Birth *", m_gender: "Gender *",
+    m_height: "Height (cm)", m_weight: "Weight (kg)",
+    m_disease_q: "Any pre-existing disease? (diabetes, BP, heart condition, etc.)",
+    m_disease_ph: "Please describe the condition",
+    m_hosp_q: "Any past hospitalization / surgery?",
+    m_hosp_ph: "Please describe — when, what happened",
+    m_tobacco_q: "Do you use tobacco / alcohol?",
+    m_family_history: "Family Medical History (if any)",
+    rel_self: "Self", rel_spouse: "Spouse", rel_son: "Son", rel_daughter: "Daughter",
+    rel_father: "Father", rel_mother: "Mother", rel_other: "Other",
+    member_label: "Member", remove: "Remove",
+    s3_title: "Policy Details",
+    l_sum_insured: "Sum Insured Required *",
+    l_plan_type: "Plan Type *",
+    opt_individual: "Individual", opt_family_floater: "Family Floater",
+    l_existing_ins: "Do you have an existing health insurance policy?",
+    l_insurer_name: "Insurer Name", l_policy_number: "Policy Number",
+    s4_title: "Nominee Details",
+    s4_hint: "Details of the person who will receive the claim amount.",
+    l_nominee_name: "Nominee Name *",
+    l_relationship: "Relationship *", l_nominee_dob: "Nominee Date of Birth *",
+    s5_title: "Verify & Confirm",
+    s5_hint: "Verify your mobile number via OTP and confirm the declaration below.",
+    l_registered_mobile: "Registered Mobile Number",
+    btn_send_otp: "Send OTP", l_enter_otp: "Enter OTP", btn_verify: "Verify",
+    otp_sending: "Sending OTP...", otp_sent: "OTP sent. Please check your phone.",
+    otp_verified: "✓ Mobile number verified.", otp_error_generic: "Something went wrong, please try again.",
+    otp_network_error: "Network error, please try again.",
+    l_consent: "I confirm that all the details given above are correct and I agree to this declaration.",
+    btn_submit: "Submit Form", btn_submitting: "Submitting...",
+    declaration_tpl: (name) => `<b>Declaration:</b> I, <b>${name}</b>, declare that all the information provided in this form (including personal and medical details) is true, complete, and correct. I understand that concealing or misrepresenting any information may lead to claim rejection or policy cancellation. I am giving my consent through OTP verification.`,
+    success_title: "Form Submitted Successfully",
+    success_text: "Your health insurance declaration has been submitted successfully. Our team will contact you shortly.",
+    reference_id: "Reference ID: ",
+    err_add_member: "Please add at least one insured member.",
+    submit_generic_error: "Something went wrong, please try again.",
+  },
+  gu: {
+    subtitle: "આરોગ્ય વીમો — ગ્રાહક વિગત ઘોષણા",
+    s1_title: "તમારી વિગતો",
+    s1_hint: "કૃપા કરી પ્રપોઝર (પોલિસીધારક) ની મૂળભૂત માહિતી ભરો.",
+    l_full_name: "પૂરું નામ *",
+    l_dob: "જન્મ તારીખ *",
+    l_gender: "લિંગ *",
+    opt_select: "પસંદ કરો",
+    opt_male: "પુરુષ", opt_female: "સ્ત્રી", opt_other: "અન્ય",
+    l_mobile: "મોબાઇલ નંબર *",
+    l_email: "ઈમેલ *",
+    l_address: "સરનામું *",
+    l_city: "શહેર *", l_state: "રાજ્ય *", l_pincode: "પિનકોડ *",
+    l_pan: "પાન નંબર", l_occupation: "વ્યવસાય", l_income: "વાર્ષિક આવક (₹)",
+    btn_next: "આગળ", btn_back: "પાછળ",
+    s2_title: "વીમાધારક સભ્યો",
+    s2_hint: "કૃપા કરી જેમના માટે વીમો લેવો છે તેમની તબીબી વિગતો આપો (સ્વયં, જીવનસાથી, બાળકો, માતા-પિતા).",
+    btn_add_member: "+ સભ્ય ઉમેરો",
+    m_relationship: "સંબંધ *", m_full_name: "પૂરું નામ *", m_dob: "જન્મ તારીખ *", m_gender: "લિંગ *",
+    m_height: "ઊંચાઈ (સેમી)", m_weight: "વજન (કિગ્રા)",
+    m_disease_q: "કોઈ પૂર્વ-અસ્તિત્વમાં રહેલો રોગ છે? (ડાયાબિટીસ, બીપી, હૃદય રોગ વગેરે)",
+    m_disease_ph: "કૃપા કરી વિગત લખો",
+    m_hosp_q: "અગાઉ કોઈ હોસ્પિટલમાં દાખલ થવાનું / સર્જરી થઈ છે?",
+    m_hosp_ph: "ક્યારે, શું થયું તેની વિગત લખો",
+    m_tobacco_q: "તમાકુ / દારૂનું સેવન કરો છો?",
+    m_family_history: "કૌટુંબિક તબીબી ઇતિહાસ (જો કોઈ હોય તો)",
+    rel_self: "સ્વયં", rel_spouse: "જીવનસાથી", rel_son: "પુત્ર", rel_daughter: "પુત્રી",
+    rel_father: "પિતા", rel_mother: "માતા", rel_other: "અન્ય",
+    member_label: "સભ્ય", remove: "કાઢી નાખો",
+    s3_title: "પોલિસી વિગતો",
+    l_sum_insured: "જરૂરી વીમા રકમ *",
+    l_plan_type: "પ્લાનનો પ્રકાર *",
+    opt_individual: "વ્યક્તિગત", opt_family_floater: "ફેમિલી ફ્લોટર",
+    l_existing_ins: "શું તમારી પાસે હાલની આરોગ્ય વીમા પોલિસી છે?",
+    l_insurer_name: "વીમા કંપનીનું નામ", l_policy_number: "પોલિસી નંબર",
+    s4_title: "નોમિની વિગતો",
+    s4_hint: "દાવાની રકમ કોને મળશે તેની વિગતો.",
+    l_nominee_name: "નોમિનીનું નામ *",
+    l_relationship: "સંબંધ *", l_nominee_dob: "નોમિનીની જન્મ તારીખ *",
+    s5_title: "ચકાસો અને પુષ્ટિ કરો",
+    s5_hint: "OTP દ્વારા તમારો મોબાઇલ નંબર ચકાસો અને નીચે આપેલી ઘોષણાની પુષ્ટિ કરો.",
+    l_registered_mobile: "નોંધાયેલ મોબાઇલ નંબર",
+    btn_send_otp: "OTP મોકલો", l_enter_otp: "OTP દાખલ કરો", btn_verify: "ચકાસો",
+    otp_sending: "OTP મોકલી રહ્યા છીએ...", otp_sent: "OTP મોકલી દીધો છે. કૃપા કરી તપાસો.",
+    otp_verified: "✓ મોબાઇલ નંબર ચકાસાયો.", otp_error_generic: "કંઈક ખોટું થયું, ફરી પ્રયાસ કરો.",
+    otp_network_error: "નેટવર્ક ભૂલ, ફરી પ્રયાસ કરો.",
+    l_consent: "હું પુષ્ટિ કરું છું કે ઉપર આપેલી તમામ વિગતો સાચી છે અને હું આ ઘોષણા સાથે સંમત છું.",
+    btn_submit: "ફોર્મ સબમિટ કરો", btn_submitting: "સબમિટ થઈ રહ્યું છે...",
+    declaration_tpl: (name) => `<b>ઘોષણા:</b> હું, <b>${name}</b>, જાહેર કરું છું કે આ ફોર્મમાં આપેલી તમામ માહિતી (વ્યક્તિગત અને તબીબી વિગતો સહિત) સાચી, સંપૂર્ણ અને સત્ય છે. મને ખબર છે કે કોઈપણ માહિતી છુપાવવી અથવા ખોટી આપવી દાવો નકારવાનું અથવા પોલિસી રદ થવાનું કારણ બની શકે છે. હું OTP ચકાસણી દ્વારા મારી સંમતિ આપી રહ્યો/રહી છું.`,
+    success_title: "ફોર્મ સફળતાપૂર્વક સબમિટ થયું",
+    success_text: "તમારી આરોગ્ય વીમા ઘોષણા સફળતાપૂર્વક સબમિટ થઈ ગઈ છે. અમારી ટીમ ટૂંક સમયમાં તમારો સંપર્ક કરશે.",
+    reference_id: "સંદર્ભ ID: ",
+    err_add_member: "કૃપા કરી ઓછામાં ઓછો એક વીમાધારક સભ્ય ઉમેરો.",
+    submit_generic_error: "કંઈક ખોટું થયું, ફરી પ્રયાસ કરો.",
+  }
+};
+const T = TRANSLATIONS[PAGE_LANG] || TRANSLATIONS.en;
+
+function applyTranslations(){
+  document.querySelectorAll('[data-i18n]').forEach(el=>{
+    const key = el.getAttribute('data-i18n');
+    if(T[key]) el.textContent = T[key];
+  });
+  document.getElementById(PAGE_LANG === 'gu' ? 'langGu' : 'langEn').classList.add('active');
+}
+
+const TOTAL_STEPS = 5;
+let currentStep = 1;
+let memberCount = 0;
+let otpVerified = false;
+
+function renderProgress(){
+  const el = document.getElementById('progressCard');
+  el.innerHTML = '';
+  for(let i=1;i<=TOTAL_STEPS;i++){
+    const dot = document.createElement('div');
+    dot.className = 'step-dot' + (i < currentStep ? ' done' : i === currentStep ? ' active' : '');
+    dot.textContent = i < currentStep ? '✓' : i;
+    el.appendChild(dot);
+    if(i < TOTAL_STEPS){
+      const line = document.createElement('div');
+      line.className = 'step-line' + (i < currentStep ? ' done' : '');
+      el.appendChild(line);
+    }
+  }
+}
+
+function showStep(n){
+  document.querySelectorAll('.step').forEach(s => s.classList.add('hidden'));
+  document.querySelector(`.step[data-step="${n}"]`).classList.remove('hidden');
+  currentStep = n;
+  renderProgress();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function validateStep(n){
+  const stepEl = document.querySelector(`.step[data-step="${n}"]`);
+  const inputs = stepEl.querySelectorAll('[required]');
+  for(const inp of inputs){
+    if(!inp.checkValidity()){
+      inp.reportValidity();
+      return false;
+    }
+  }
+  return true;
+}
+
+function goNext(n){
+  if(!validateStep(n)) return;
+  if(n === 1){
+    document.getElementById('otpMobileDisplay').value = document.querySelector('[name=proposer_mobile]').value;
+  }
+  if(n === 2 && memberCount === 0){
+    alert(T.err_add_member);
+    return;
+  }
+  if(n === 4){
+    buildDeclarationText();
+  }
+  showStep(n+1);
+}
+function goPrev(n){ showStep(n-1); }
+
+// ---------------- Insured Members ----------------
+function addMember(){
+  memberCount++;
+  const id = memberCount;
+  const container = document.getElementById('membersContainer');
+  const div = document.createElement('div');
+  div.className = 'member-card';
+  div.id = `member-${id}`;
+  div.innerHTML = `
+    <div class="member-card-head">
+      <b>${T.member_label} ${id}</b>
+      <button type="button" class="remove-btn" onclick="removeMember(${id})">${T.remove}</button>
+    </div>
+    <label>${T.m_relationship}</label>
+    <select name="m${id}_relationship" required>
+      <option value="">${T.opt_select}</option>
+      <option value="Self">${T.rel_self}</option>
+      <option value="Spouse">${T.rel_spouse}</option>
+      <option value="Son">${T.rel_son}</option>
+      <option value="Daughter">${T.rel_daughter}</option>
+      <option value="Father">${T.rel_father}</option>
+      <option value="Mother">${T.rel_mother}</option>
+      <option value="Other">${T.rel_other}</option>
+    </select>
+    <label>${T.m_full_name}</label>
+    <input type="text" name="m${id}_name" required>
+    <div class="row2">
+      <div><label>${T.m_dob}</label><input type="date" name="m${id}_dob" required></div>
+      <div><label>${T.m_gender}</label>
+        <select name="m${id}_gender" required>
+          <option value="">${T.opt_select}</option>
+          <option value="Male">${T.opt_male}</option>
+          <option value="Female">${T.opt_female}</option>
+          <option value="Other">${T.opt_other}</option>
+        </select>
+      </div>
+    </div>
+    <div class="row2">
+      <div><label>${T.m_height}</label><input type="number" name="m${id}_height"></div>
+      <div><label>${T.m_weight}</label><input type="number" name="m${id}_weight"></div>
+    </div>
+    <div class="toggle-row">
+      <span>${T.m_disease_q}</span>
+      <label class="switch"><input type="checkbox" id="m${id}_disease_toggle" onchange="toggleDetail(${id},'disease')"><span class="slider"></span></label>
+    </div>
+    <div id="m${id}_disease_details" class="hidden">
+      <textarea name="m${id}_disease_text" placeholder="${T.m_disease_ph}"></textarea>
+    </div>
+    <div class="toggle-row">
+      <span>${T.m_hosp_q}</span>
+      <label class="switch"><input type="checkbox" id="m${id}_hosp_toggle" onchange="toggleDetail(${id},'hosp')"><span class="slider"></span></label>
+    </div>
+    <div id="m${id}_hosp_details" class="hidden">
+      <textarea name="m${id}_hosp_text" placeholder="${T.m_hosp_ph}"></textarea>
+    </div>
+    <div class="toggle-row">
+      <span>${T.m_tobacco_q}</span>
+      <label class="switch"><input type="checkbox" name="m${id}_tobacco"><span class="slider"></span></label>
+    </div>
+    <label>${T.m_family_history}</label>
+    <textarea name="m${id}_family_history"></textarea>
+  `;
+  container.appendChild(div);
+}
+function removeMember(id){
+  document.getElementById(`member-${id}`).remove();
+}
+function toggleDetail(id, kind){
+  const toggle = document.getElementById(`m${id}_${kind}_toggle`);
+  document.getElementById(`m${id}_${kind}_details`).classList.toggle('hidden', !toggle.checked);
+}
+function toggleExistingIns(el){
+  document.getElementById('existingInsFields').classList.toggle('hidden', !el.checked);
+}
+
+// ---------------- OTP ----------------
+async function sendOtp(){
+  const mobile = document.getElementById('otpMobileDisplay').value;
+  const statusEl = document.getElementById('otpStatus');
+  statusEl.className = 'otp-status wait';
+  statusEl.textContent = T.otp_sending;
+  try{
+    const res = await fetch('/api/send-otp', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({mobile})
+    });
+    const data = await res.json();
+    if(res.ok){
+      document.getElementById('otpInputWrap').classList.remove('hidden');
+      statusEl.className = 'otp-status ok';
+      statusEl.textContent = T.otp_sent;
+    } else {
+      statusEl.className = 'otp-status err';
+      statusEl.textContent = data.detail || T.otp_error_generic;
+    }
+  }catch(e){
+    statusEl.className = 'otp-status err';
+    statusEl.textContent = T.otp_network_error;
+  }
+}
+
+async function checkOtp(){
+  const mobile = document.getElementById('otpMobileDisplay').value;
+  const otp = document.getElementById('otpInput').value;
+  const statusEl = document.getElementById('otpStatus');
+  try{
+    const res = await fetch('/api/verify-otp', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({mobile, otp})
+    });
+    const data = await res.json();
+    if(res.ok){
+      otpVerified = true;
+      statusEl.className = 'otp-status ok';
+      statusEl.textContent = T.otp_verified;
+      updateSubmitState();
+    } else {
+      otpVerified = false;
+      statusEl.className = 'otp-status err';
+      statusEl.textContent = data.detail || T.otp_error_generic;
+    }
+  }catch(e){
+    statusEl.className = 'otp-status err';
+    statusEl.textContent = T.otp_network_error;
+  }
+}
+
+function buildDeclarationText(){
+  const name = document.querySelector('[name=proposer_name]').value || 'Applicant';
+  document.getElementById('declarationText').innerHTML = T.declaration_tpl(name);
+}
+
+document.getElementById('agreeCheck').addEventListener('change', updateSubmitState);
+function updateSubmitState(){
+  document.getElementById('submitBtn').disabled = !(otpVerified && document.getElementById('agreeCheck').checked);
+}
+
+// ---------------- Submit ----------------
+function collectMembers(){
+  const members = [];
+  document.querySelectorAll('.member-card').forEach(card=>{
+    const id = card.id.split('-')[1];
+    members.push({
+      relationship: card.querySelector(`[name=m${id}_relationship]`).value,
+      full_name: card.querySelector(`[name=m${id}_name]`).value,
+      dob: card.querySelector(`[name=m${id}_dob]`).value,
+      gender: card.querySelector(`[name=m${id}_gender]`).value,
+      height_cm: card.querySelector(`[name=m${id}_height]`).value,
+      weight_kg: card.querySelector(`[name=m${id}_weight]`).value,
+      has_pre_existing_disease: document.getElementById(`m${id}_disease_toggle`).checked,
+      pre_existing_details: card.querySelector(`[name=m${id}_disease_text]`).value,
+      has_past_hospitalization: document.getElementById(`m${id}_hosp_toggle`).checked,
+      hospitalization_details: card.querySelector(`[name=m${id}_hosp_text]`).value,
+      uses_tobacco_alcohol: card.querySelector(`[name=m${id}_tobacco]`).checked,
+      family_medical_history: card.querySelector(`[name=m${id}_family_history]`).value,
+    });
+  });
+  return members;
+}
+
+async function submitForm(){
+  const f = document.getElementById('declarationForm');
+  const errBanner = document.getElementById('errorBanner');
+  errBanner.style.display = 'none';
+
+  const payload = {
+    proposer_name: f.proposer_name.value,
+    proposer_dob: f.proposer_dob.value,
+    proposer_gender: f.proposer_gender.value,
+    proposer_mobile: f.proposer_mobile.value,
+    proposer_email: f.proposer_email.value,
+    proposer_address: f.proposer_address.value,
+    proposer_city: f.proposer_city.value,
+    proposer_state: f.proposer_state.value,
+    proposer_pincode: f.proposer_pincode.value,
+    proposer_pan: f.proposer_pan.value,
+    proposer_occupation: f.proposer_occupation.value,
+    proposer_annual_income: f.proposer_annual_income.value,
+    insured_members: collectMembers(),
+    sum_insured: f.sum_insured.value,
+    plan_type: (f.plan_type.value || ''),
+    has_existing_health_insurance: document.getElementById('existingInsToggle').checked,
+    existing_insurer_name: f.existing_insurer_name.value,
+    existing_policy_number: f.existing_policy_number.value,
+    nominee_name: f.nominee_name.value,
+    nominee_relationship: f.nominee_relationship.value,
+    nominee_dob: f.nominee_dob.value,
+    declaration_agreed: document.getElementById('agreeCheck').checked,
+    otp_verified_mobile: document.getElementById('otpMobileDisplay').value,
+  };
+
+  document.getElementById('submitBtn').disabled = true;
+  document.getElementById('submitBtn').textContent = T.btn_submitting;
+
+  try{
+    const res = await fetch('/api/submit-form', {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+    if(res.ok){
+      document.querySelectorAll('.step').forEach(s=>s.classList.add('hidden'));
+      document.getElementById('successScreen').classList.remove('hidden');
+      document.getElementById('submissionIdBadge').textContent = T.reference_id + data.submission_id;
+      document.getElementById('progressCard').innerHTML = '';
+    } else {
+      errBanner.textContent = data.detail || T.submit_generic_error;
+      errBanner.style.display = 'block';
+      document.getElementById('submitBtn').disabled = false;
+      document.getElementById('submitBtn').textContent = T.btn_submit;
+    }
+  }catch(e){
+    errBanner.textContent = T.otp_network_error;
+    errBanner.style.display = 'block';
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('submitBtn').textContent = T.btn_submit;
+  }
+}
+
+// init
+applyTranslations();
+addMember();
+renderProgress();
+</script>
+</body>
+</html>
